@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# 3DGS data / checkpoints / outputs (don't commit large binaries)
+*.ply
+*.ckpt
+*.pth
+data/
+outputs/
+renders/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

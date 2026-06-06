@@ -17,23 +17,26 @@ the exported `.ply`, so it works regardless of the trainer that produced it.
 
 ## Results
 
-A single tool, three scenes, large size cuts at near-lossless quality. Best Pareto
-point per scene:
+One config, three scenes, a consistent ~74% size cut at modest quality cost.
+Recommended operating point is **mixed precision** (FP16 geometry + INT8 appearance) at SH degree 3:
 
-| Scene   | Config              | Size (MB) | Size ↓ | ΔPSNR (dB) |
-|---------|---------------------|-----------|--------|------------|
-| Garden  | pruned + SH3 + FP16 | 170       | 54%    | −0.54      |
-| Bicycle | pruned + SH1 + mixed| 82        | 87%    | −2.32      |
-| Vase    | pruned + SH3 + mixed| 55.5      | 74.3%  | −1.13      |
+| Scene   | Size (MB)     | Size ↓ | ΔPSNR (dB) |
+|---------|---------------|--------|------------|
+| Garden  | 390.0 → 101.0 | 74.1%  | −1.33      |
+| Bicycle | 657.0 → 170.1 | 74.1%  | −2.69      |
+| Vase    | 209.4 → 54.3  | 74.1%  | −1.29      |
 
-Key findings:
-- The opacity threshold **self-calibrates** per scene (≈0.005 → 0.015), confirming the *adaptive* design empirically.
-- Mixed-precision (FP16 geometry + INT8 appearance) matches full-FP16 PSNR across all SH levels.
-- Indoor matte scenes tolerate more aggressive SH reduction than outdoor scenes.
+*Nerfstudio `splatfacto`, MipNeRF-360 + a self-captured indoor scene (Vase). PSNR vs. uncompressed baseline.*
 
-> ⚠️ The numbers above are scaffolded from the ablation tables — re-confirm against your final results before tagging a release.
+Dials:
+- **Conservative** — `--quant fp16` → ~55% reduction at the same quality as mixed.
+- **Aggressive** — `--degree 1` → deeper cuts on scenes that tolerate it (indoor/matte > dense outdoor).
 
-<p align="center"><img src="assets/garden_before_after.png" width="80%" alt="Garden before/after"></p>
+**Finding — why naive INT8 isn't a geometry mode:** a single global INT8 range per field
+collapses geometry PSNR to ~15 dB, scene-independent. Mixed precision avoids this by keeping
+geometry FP16. Full INT8 quality needs many *local* ranges (sub-group INT8) — on the roadmap.
+
+<p align="center"><img src="assets/fig5_qualitative_garden.png" width="80%" alt="Garden: baseline / naive INT8 / sub-group / mixed"></p>
 
 ---
 

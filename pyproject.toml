@@ -17,7 +17,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Image Processing",
 ]
 dependencies = [
-    "numpy>=1.26,<2.0",
+    "numpy>=1.26",
     "plyfile>=1.0",
     "typer>=0.12",
     "rich>=13.0",
@@ -33,7 +33,7 @@ dev = ["pytest>=8.0", "ruff>=0.5"]
 splat-slim = "splat_slim.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/your-username/splat-slim"
+Homepage = "https://github.com/Daceyyreal/splat-slim"
 Paper = "https://doi.org/PLACEHOLDER"
 
 [tool.hatch.build.targets.wheel]

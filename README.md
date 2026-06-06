@@ -28,7 +28,8 @@ Recommended operating point is **mixed precision** (FP16 geometry + INT8 appeara
 
 *Nerfstudio `splatfacto`, MipNeRF-360 + a self-captured indoor scene (Vase). PSNR vs. uncompressed baseline.*
 
-<p align="center"><img src="assets/fig1_pareto.png" width="70%" alt="Size vs PSNR Pareto frontier across scenes and quant modes"></p>
+<p align="center"><img src="assets/fig1_pareto.png" width="85%" alt="Size vs PSNR across scenes and quant modes"></p>
+<p align="center"><em>Size-quality trade-off. Solid curves = mixed precision (what the table above reports).</em></p>
 
 Dials:
 - **Conservative** — `--quant fp16` → ~55% reduction at the same quality as mixed.
@@ -37,6 +38,8 @@ Dials:
 **Finding — why naive INT8 isn't a geometry mode:** a single global INT8 range per field
 collapses geometry PSNR to ~15 dB, scene-independent. Mixed precision avoids this by keeping
 geometry FP16. Full INT8 quality needs many *local* ranges (sub-group INT8) — on the roadmap.
+
+<p align="center"><img src="assets/fig3_quantization_compare.png" width="85%" alt="Quantization mode comparison across scenes"></p>
 
 <p align="center"><img src="assets/fig5_qualitative_garden.png" width="80%" alt="Garden: baseline / naive INT8 / sub-group / mixed"></p>
 

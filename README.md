@@ -28,6 +28,8 @@ Recommended operating point is **mixed precision** (FP16 geometry + INT8 appeara
 
 *Nerfstudio `splatfacto`, MipNeRF-360 + a self-captured indoor scene (Vase). PSNR vs. uncompressed baseline.*
 
+<p align="center"><img src="assets/fig1_pareto.png" width="70%" alt="Size vs PSNR Pareto frontier across scenes and quant modes"></p>
+
 Dials:
 - **Conservative** — `--quant fp16` → ~55% reduction at the same quality as mixed.
 - **Aggressive** — `--degree 1` → deeper cuts on scenes that tolerate it (indoor/matte > dense outdoor).

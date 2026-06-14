@@ -48,12 +48,16 @@ geometry FP16. Full INT8 quality needs many *local* ranges (sub-group INT8) — 
 
 ## Install
 
+Not yet on PyPI — install the latest release straight from GitHub:
+
 ```bash
-pip install splat-slim          # core CLI (numpy, plyfile, typer)
-pip install "splat-slim[torch]" # add torch for tensor-based stages/metrics
+pip install "git+https://github.com/Daceyyreal/splat-slim.git@v0.1.0"                      # core CLI (numpy, plyfile, typer)
+pip install "splat-slim[torch] @ git+https://github.com/Daceyyreal/splat-slim.git@v0.1.0"  # + torch for tensor-based stages/metrics
 ```
 
-From source:
+(Drop the `@v0.1.0` to track the latest `main`.)
+
+From source, for development:
 
 ```bash
 git clone https://github.com/Daceyyreal/splat-slim

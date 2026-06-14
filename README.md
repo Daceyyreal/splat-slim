@@ -7,6 +7,8 @@
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
+<p align="center"><img src="assets/demo.gif" width="900" alt="splat-slim demo — a 216 MB model compressed to 55 MB in one command"></p>
+
 `splat-slim` takes a trained 3D Gaussian Splatting (3DGS) model and shrinks it
 **without retraining**. It runs as a post-processing pass — prune, clean,
 reduce spherical harmonics, quantize — and is framework-agnostic: it operates on

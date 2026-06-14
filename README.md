@@ -2,6 +2,7 @@
 
 **Lightweight, training-free post-processing to shrink 3D Gaussian Splatting models.**
 
+[![Release](https://img.shields.io/github/v/release/Daceyyreal/splat-slim?sort=semver)](https://github.com/Daceyyreal/splat-slim/releases/latest)
 [![CI](https://github.com/Daceyyreal/splat-slim/actions/workflows/ci.yml/badge.svg)](https://github.com/Daceyyreal/splat-slim/actions)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)

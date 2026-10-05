@@ -49,3 +49,37 @@ def test_script_rejects_a_ply_without_the_required_fields(tmp_path, capsys):
     io.save_splat(ply, {k: v for k, v in _scene(200).items() if k != "opacity"})
     assert _load_script().main([str(ply)]) == 2
     assert "opacity" in capsys.readouterr().err
+
+
+def _size_rows(out):
+    return {m.group(1): int(m.group(2).replace(",", ""))
+            for m in re.finditer(r"^\s+(fp16|mixed|int8-subgroup|int8)\s+([\d,]+)\s", out, re.MULTILINE)}
+
+
+def test_sizes_section_runs_the_cli_in_every_mode_and_cleans_up(tmp_path, capsys):
+    ply, work = tmp_path / "toy.ply", tmp_path / "work"
+    work.mkdir()
+    io.save_splat(ply, _scene())
+    code = _load_script().main([str(ply), "--groups", "40", "--sizes", "--tmp-dir", str(work)])
+    out = capsys.readouterr().out
+    assert code == 0
+    sizes = _size_rows(out)
+    assert set(sizes) == {"fp16", "mixed", "int8", "int8-subgroup"}
+    assert sizes["fp16"] > sizes["mixed"] > sizes["int8"]  # 2 B, mixed, 1 B per value
+    assert "no paper column" in out
+    assert list(work.iterdir()) == []  # every temporary output was deleted
+
+
+def test_sizes_flag_a_mismatch_with_the_paper_without_failing(tmp_path, capsys):
+    ply = tmp_path / "toy.ply"
+    io.save_splat(ply, _scene())
+    mod = _load_script()
+    # toy files are kilobytes; give the "paper" values that cannot match so the flagging path runs
+    mod.PAPER = {"garden": {"n0": 1, "pruned": 1.0, "fp16": 50.0, "mixed": 50.0, "int8": 50.0,
+                            "int8-subgroup": 50.0}}
+    code = mod.main([str(ply), "--groups", "40", "--sizes", "--paper", "garden"])
+    out = capsys.readouterr().out
+    assert code == 0  # the size comparison is informational
+    assert out.count("DIFFERS") == 4
+    assert "Nothing is hard-coded to pass or fail on it" in out
+    assert "paper column: garden" in out

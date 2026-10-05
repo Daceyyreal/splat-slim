@@ -161,15 +161,19 @@ commands and that procedure are in [`examples/reproduce.md`](examples/reproduce.
 `splat-slim run --degree 3` prunes with tau = 0.0138 as in the paper, keeps 1,402,751 Gaussians after
 cleaning, and writes 101.0 MB with `--quant mixed` and 173.9 MB with `--quant fp16`: the sizes in the
 paper's Garden table. The quality columns of that table have not been re-run through this CLI.
-`examples/verify_subgroup.py` re-checks the sub-group error bound, the position-error gain and the
-scale-cap behaviour on any PLY; its output for our Garden and Bicycle PLYs is in
+`examples/verify_subgroup.py` re-checks the sub-group error bound, the position-error gain, the
+scale-cap behaviour and (with `--sizes`) the output sizes of fp16, mixed, int8 and int8-subgroup on any
+PLY, next to the paper's values; its output for our Garden and Bicycle PLYs is in
 [`examples/verify_subgroup.md`](examples/verify_subgroup.md).
 
 ## Known differences from the paper
 
 - **Sub-group INT8 file size.** On Garden this CLI writes 87.0 MB plus a 0.43 MB sidecar
   (1,402,751 Gaussians x 62 fields x 1 byte); the paper reports 85.7 MB for `pruned_sh3_int8_subgroup`.
-  The paper's plain per-column INT8 row is 87.0 MB, the size of this CLI's sub-group PLY alone.
+  The paper's plain per-column INT8 row is 87.0 MB, the size of this CLI's sub-group PLY alone. In the
+  paper's own tables the int8 and sub-group sizes are equal on Bicycle and Vase; Garden is the only scene
+  where they differ, and on Bicycle this CLI's sizes match the paper once scaled to our Gaussian count
+  (see [`examples/verify_subgroup.md`](examples/verify_subgroup.md)).
 - **Opacity in mixed mode.** `--quant mixed` stores `x, y, z`, `scale_*` and `rot_*` as FP16 and every
   other field, opacity included, as INT8. The paper's text lists opacities with the FP16 geometry,
   but its table sizes (Garden 101.0 MB = 72 bytes per Gaussian) correspond to INT8 opacity, as here.

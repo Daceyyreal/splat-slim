@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "splat-slim"
-version = "0.1.0"
+version = "0.2.0"
 description = "Lightweight, training-free post-processing to shrink 3D Gaussian Splatting models."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -34,7 +34,6 @@ splat-slim = "splat_slim.cli:app"
 
 [project.urls]
 Homepage = "https://github.com/Daceyyreal/splat-slim"
-Paper = "https://doi.org/PLACEHOLDER"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/splat_slim"]

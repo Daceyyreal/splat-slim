@@ -4,12 +4,12 @@ build-backend = "hatchling.build"
 
 [project]
 name = "splat-slim"
-version = "0.2.0"
+version = "0.2.1"
 description = "Lightweight, training-free post-processing to shrink 3D Gaussian Splatting models."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
-authors = [{ name = "Dace" }]
+authors = [{ name = "Md. Taifur Hossain" }]
 keywords = ["3d-gaussian-splatting", "3dgs", "nerf", "compression", "computer-vision"]
 classifiers = [
     "Programming Language :: Python :: 3",

@@ -10,9 +10,9 @@ Units: PLY / splatfacto store scales in LOG space. ``scale_cap`` is given in lin
 units and is converted with ``log`` before being compared against the stored values,
 so the default ``scale_cap=1.0`` is the paper's absolute bound ``log(1.0) = 0`` on the
 stored log-scales. (v0.1.0 compared the stored log-scales against 1.0 directly, i.e. a
-linear cap of e = 2.718. On the Garden and Bicycle exports checked, the 99th-percentile
-bound is about -2 in log space, far below either cap, so the two readings keep the same
-Gaussians there.)
+linear cap of e = 2.718. On our Garden and Bicycle PLYs the 99th-percentile
+bound is between -1.9 and -2.4 in log space, far below either cap, so the two readings keep
+the same Gaussians there; measured on our Garden/Bicycle PLYs, see examples/verify_subgroup.md.)
 
 Both are *removal* masks (the Gaussian is dropped), not value clips.
 """

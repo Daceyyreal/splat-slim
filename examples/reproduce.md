@@ -68,6 +68,8 @@ Sizes on the Garden scene (1,572,747 Gaussians, 390.0 MB), measured from the fil
 | `--degree 3 --quant int8-subgroup` | 87.0 MB + 0.43 MB sidecar |
 
 The first two match the paper's Garden table. After pruning and cleaning, 1,402,751 Gaussians remain.
+`python examples/verify_subgroup.py garden.ply` re-checks the sub-group claims on your own PLY
+(results for our Garden and Bicycle PLYs: [`verify_subgroup.md`](verify_subgroup.md)).
 
 ## Getting quality numbers
 

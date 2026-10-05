@@ -64,11 +64,11 @@ value. At SH degree 3 the paper reports it recovering Garden from 14.92 to 25.82
 Not yet on PyPI — install the latest release straight from GitHub:
 
 ```bash
-pip install "git+https://github.com/Daceyyreal/splat-slim.git@v0.2.2"                      # core CLI (numpy, plyfile, typer)
-pip install "splat-slim[torch] @ git+https://github.com/Daceyyreal/splat-slim.git@v0.2.2"  # + torch for tensor-based stages/metrics
+pip install "git+https://github.com/Daceyyreal/splat-slim.git@v0.2.3"                      # core CLI (numpy, plyfile, typer)
+pip install "splat-slim[torch] @ git+https://github.com/Daceyyreal/splat-slim.git@v0.2.3"  # + torch for tensor-based stages/metrics
 ```
 
-(Drop the `@v0.2.2` to track the latest `main`.)
+(Drop the `@v0.2.3` to track the latest `main`.)
 
 From source, for development:
 
@@ -102,8 +102,9 @@ splat-slim reduce-sh b.ply c.ply --degree 2
 
 > **Changed in v0.2.0:** `--scale-cap` is now a *linear* size (default 1.0), compared against the
 > stored log-scales as `log_scale <= log(scale_cap)`, the paper's cap of log 1.0 = 0. v0.1.0
-> compared the log-scales with 1.0 directly. On the Garden and Bicycle exports checked this keeps
-> the same Gaussians, because the 99th-percentile scale bound is already far below either value.
+> compared the log-scales with 1.0 directly. On our Garden and Bicycle PLYs this keeps the same
+> Gaussians, because the 99th-percentile scale bound is already far below either value (measured
+> on our Garden/Bicycle PLYs; see [`examples/verify_subgroup.md`](examples/verify_subgroup.md)).
 > An unknown `--quant` value is now an error instead of silently writing an unquantized file.
 
 ## How it works
@@ -160,6 +161,9 @@ commands and that procedure are in [`examples/reproduce.md`](examples/reproduce.
 `splat-slim run --degree 3` prunes with tau = 0.0138 as in the paper, keeps 1,402,751 Gaussians after
 cleaning, and writes 101.0 MB with `--quant mixed` and 173.9 MB with `--quant fp16`: the sizes in the
 paper's Garden table. The quality columns of that table have not been re-run through this CLI.
+`examples/verify_subgroup.py` re-checks the sub-group error bound, the position-error gain and the
+scale-cap behaviour on any PLY; its output for our Garden and Bicycle PLYs is in
+[`examples/verify_subgroup.md`](examples/verify_subgroup.md).
 
 ## Known differences from the paper
 
@@ -169,9 +173,10 @@ paper's Garden table. The quality columns of that table have not been re-run thr
 - **Opacity in mixed mode.** `--quant mixed` stores `x, y, z`, `scale_*` and `rot_*` as FP16 and every
   other field, opacity included, as INT8. The paper's text lists opacities with the FP16 geometry,
   but its table sizes (Garden 101.0 MB = 72 bytes per Gaussian) correspond to INT8 opacity, as here.
-- **Absolute scale cap.** The cap at log-scale 0 does not trigger on the Garden and Bicycle exports
-  checked: the 1-99 percentile bound is already about -2 there, so the cap removes nothing on its
-  own. The paper reports it removing a few splats on Bicycle.
+- **Absolute scale cap.** The cap at log-scale 0 does not trigger on our Garden and Bicycle PLYs:
+  the 99th-percentile log-scale is between -1.86 and -2.44 there, so the cap removes nothing on its
+  own (measured on our Garden/Bicycle PLYs; see [`examples/verify_subgroup.md`](examples/verify_subgroup.md)).
+  The paper reports it removing a few splats on Bicycle.
 - **SH degree.** The CLI reduces to degree 1, 2 or 3. The paper also mentions degree 0 (DC term only).
 - **Evaluation tooling.** There is no checkpoint-injection / `ns-eval` harness, no per-scene result
   files and no figure-generation scripts in this repository yet; only the figure images are included.

@@ -1,13 +1,17 @@
-"""Stage 1 - adaptive opacity pruning.
+"""Stage 1 - adaptive opacity pruning (paper section 3.1).
 
-Removes near-transparent Gaussians. The threshold is *adaptive*: it is the
-Pth-percentile of the per-Gaussian sigmoid opacity (default 5th percentile),
-so it self-calibrates to each scene rather than using a fixed cutoff. Across
-scenes this lands at distinct values (~0.005 -> ~0.015), which is the empirical
-evidence behind the "adaptive" claim.
+Removes near-transparent Gaussians. Opacities are stored as logits ``o``; the
+cutoff is the 5th percentile of their sigmoid,
 
-Drop your validated pruning logic into ``prune_opacity`` below. The percentile
-threshold computation is provided; wire it to your field layout.
+    tau = percentile_5(sigmoid(o)),
+
+and every Gaussian with ``sigmoid(o) < tau`` is dropped, i.e. the lowest-opacity
+5% of the scene (``percentile`` is configurable; the paper uses 5). Because the
+threshold is computed per scene it adapts to splat density instead of using a
+fixed cutoff such as splatfacto's training-time ``cull-alpha-thresh`` of 0.005.
+The paper reports tau = 0.0105 (Bicycle), 0.0138 (Garden) and 0.0148 (Vase).
+
+A Gaussian whose opacity equals tau exactly is kept.
 """
 
 from __future__ import annotations

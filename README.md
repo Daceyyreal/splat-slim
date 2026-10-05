@@ -64,11 +64,11 @@ value. At SH degree 3 the paper reports it recovering Garden from 14.92 to 25.82
 Not yet on PyPI — install the latest release straight from GitHub:
 
 ```bash
-pip install "git+https://github.com/Daceyyreal/splat-slim.git@v0.2.0"                      # core CLI (numpy, plyfile, typer)
-pip install "splat-slim[torch] @ git+https://github.com/Daceyyreal/splat-slim.git@v0.2.0"  # + torch for tensor-based stages/metrics
+pip install "git+https://github.com/Daceyyreal/splat-slim.git@v0.2.1"                      # core CLI (numpy, plyfile, typer)
+pip install "splat-slim[torch] @ git+https://github.com/Daceyyreal/splat-slim.git@v0.2.1"  # + torch for tensor-based stages/metrics
 ```
 
-(Drop the `@v0.2.0` to track the latest `main`.)
+(Drop the `@v0.2.1` to track the latest `main`.)
 
 From source, for development:
 
@@ -154,6 +154,21 @@ commands and that procedure are in [`examples/reproduce.md`](examples/reproduce.
 `splat-slim run --degree 3` prunes with tau = 0.0138 as in the paper, keeps 1,402,751 Gaussians after
 cleaning, and writes 101.0 MB with `--quant mixed` and 173.9 MB with `--quant fp16`: the sizes in the
 paper's Garden table. The quality columns of that table have not been re-run through this CLI.
+
+## Known differences from the paper
+
+- **Sub-group INT8 file size.** On Garden this CLI writes 87.0 MB plus a 0.43 MB sidecar
+  (1,402,751 Gaussians x 62 fields x 1 byte); the paper reports 85.7 MB for `pruned_sh3_int8_subgroup`.
+  The paper's plain per-column INT8 row is 87.0 MB, the size of this CLI's sub-group PLY alone.
+- **Opacity in mixed mode.** `--quant mixed` stores `x, y, z`, `scale_*` and `rot_*` as FP16 and every
+  other field, opacity included, as INT8. The paper's text lists opacities with the FP16 geometry,
+  but its table sizes (Garden 101.0 MB = 72 bytes per Gaussian) correspond to INT8 opacity, as here.
+- **Absolute scale cap.** The cap at log-scale 0 does not trigger on the Garden and Bicycle exports
+  checked: the 1-99 percentile bound is already about -2 there, so the cap removes nothing on its
+  own. The paper reports it removing a few splats on Bicycle.
+- **SH degree.** The CLI reduces to degree 1, 2 or 3. The paper also mentions degree 0 (DC term only).
+- **Evaluation tooling.** There is no checkpoint-injection / `ns-eval` harness, no per-scene result
+  files and no figure-generation scripts in this repository yet; only the figure images are included.
 
 ## Roadmap
 

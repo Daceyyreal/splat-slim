@@ -51,8 +51,8 @@ def save_splat(path: str | Path, fields: dict[str, np.ndarray]) -> None:
             dtype.append((name, "f4"))
     n = len(next(iter(out.values())))
     structured = np.empty(n, dtype=dtype)
-    for name in out:
-        structured[name] = out[name]
+    for name, values in out.items():
+        structured[name] = values
     PlyData([PlyElement.describe(structured, "vertex")], text=False).write(str(path))
 
 

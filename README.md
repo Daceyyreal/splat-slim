@@ -64,11 +64,11 @@ value. At SH degree 3 the paper reports it recovering Garden from 14.92 to 25.82
 Not yet on PyPI — install the latest release straight from GitHub:
 
 ```bash
-pip install "git+https://github.com/Daceyyreal/splat-slim.git@v0.2.1"                      # core CLI (numpy, plyfile, typer)
-pip install "splat-slim[torch] @ git+https://github.com/Daceyyreal/splat-slim.git@v0.2.1"  # + torch for tensor-based stages/metrics
+pip install "git+https://github.com/Daceyyreal/splat-slim.git@v0.2.2"                      # core CLI (numpy, plyfile, typer)
+pip install "splat-slim[torch] @ git+https://github.com/Daceyyreal/splat-slim.git@v0.2.2"  # + torch for tensor-based stages/metrics
 ```
 
-(Drop the `@v0.2.1` to track the latest `main`.)
+(Drop the `@v0.2.2` to track the latest `main`.)
 
 From source, for development:
 
@@ -108,13 +108,19 @@ splat-slim reduce-sh b.ply c.ply --degree 2
 
 ## How it works
 
+Four stages, applied in this order (paper section 3):
+
 | Stage | What it does |
 |-------|--------------|
 | 1. Prune    | Drop near-transparent Gaussians below an adaptive opacity percentile. |
 | 2. Clean    | Remove spatial floaters and cap over-large scales. |
 | 3. Reduce SH| Lower spherical-harmonic degree (3→2→1) with channel-blocked slicing. |
 | 4. Quantize | `fp16`; `mixed` (FP16 geometry + INT8 appearance); or `int8-subgroup` (INT8 with Morton-ordered local ranges). |
-| 5. Report   | The CLI prints the size of each output; `splat_slim.metrics` has PSNR and size-reduction helpers. Rendering and PSNR/SSIM/LPIPS are not part of the CLI (see [Reproducing](#reproducing-the-paper-results)). |
+
+**Size report** (not a stage): `splat-slim info scene.ply` prints the Gaussian count, field count and
+file size, and every command prints the size of its output. `splat_slim.metrics` has PSNR and
+size-reduction helpers; rendering and PSNR/SSIM/LPIPS are not part of the CLI (see
+[Reproducing](#reproducing-the-paper-results)).
 
 ### Sub-group INT8 format
 
